@@ -12,7 +12,7 @@
 <#
 .DESCRIPTION
         This script initializes Windows 10/11 and, then, installs initial software needed by
-        employees at <insert company here>. 
+        employees at <insert company here>.
 #>
 
 #########################
@@ -57,7 +57,7 @@ function InstallApps { #Check for Winget, Install Winget if it isn't installed, 
             Write-Output "Installing: " $App.name
             winget install -e -h --accept-source-agreements --accept-package-agreements --id $App.name
         } else {
-            Write-Output "Skipping:   "$App.name " is already installed; skipping."
+            Write-Output "Skipping:  $($App.name) is already installed; skipping."
         }
     }
 }
