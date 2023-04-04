@@ -73,29 +73,9 @@ function WingetCheck {
 
 function InstallApps { #Check for Winget, Install Winget if it isn't installed, and then install apps from a list.
     header("Installing Applications...")
-    $Apps = @( #Define's application's names as appears in winget.
-        "7zip.7zip",
-        "Git.Git",
-        "Google.Chrome",
-        "Microsoft.PowerShell",
-        "Microsoft.PowerToys",
-        "Microsoft.VisualStudioCode",
-        "Microsoft.VisualStudio.2022.Community",
-        "Microsoft.WindowsTerminal",
-        "Notepad++.Notepad++",
-        "Microsoft.Teams",
-        "voidtools.Everything.Lite"
-    )
-
-    foreach ($App in $Apps) {
-        $listApp = winget list --exact -q $App
-        if ($listApp -contains $App) {
-            Write-Output "Installing: $($App)..."
-            winget install -e -h --accept-source-agreements --accept-package-agreements --id $App
-        } else {
-            Write-Output "Skipping:  $($App) is already installed; Skipping..."
-        }
-    }
+    $Apps = ".\apps.json"
+    # winget install -e -h --accept-source-agreements --accept-package-agreements
+    winget import -i $Apps --accept-package-agreements --accept-source-agreements
 }
 
 #########################
