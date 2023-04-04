@@ -12,7 +12,7 @@
 <#
 .DESCRIPTION
         This script initializes Windows 10/11 and, then, installs initial software needed by
-        employees at <insert company here>. 
+        employees at <insert company here>.
 #>
 
 #########################
