@@ -37,7 +37,7 @@ function AAP($pkg) {
         .DESCRIPTION
             Installs AppxPackage.
     #>
-    Add-AppxPackage $pkg -ErrorAction SilentlyContinue
+    Add-AppxPackage -ErrorAction:SilentlyContinue $pkg 
 }
 
 function InstallPrereqs {
@@ -49,8 +49,8 @@ function InstallPrereqs {
     #>
 
     header("Installing Winget Prerequisites...")
-    AAP(.\packages\Microsoft.VCLibs.x64.14.00.Desktop.appx)
-    AAP(.\prereqs\Microsoft.UI.Xaml.2.7.appx)
+    AAP(".\prereqs\Microsoft.VCLibs.x64.14.00.Desktop.appx")
+    AAP(".\prereqs\Microsoft.UI.Xaml.2.7.appx")
 }
 
 function WingetCheck {
@@ -67,6 +67,7 @@ function WingetCheck {
         Write-Output "Cleaning up (Removing winget install file)..."
         Remove-Item ".\Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle"
         Write-Output "Refreshing Environment Variables..."
+        #Refresh environment variables. Thanks to weq in the PowerShell Discord for this.
         $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
     }
 }
@@ -74,7 +75,6 @@ function WingetCheck {
 function InstallApps { #Check for Winget, Install Winget if it isn't installed, and then install apps from a list.
     header("Installing Applications...")
     $Apps = ".\apps.json"
-    # winget install -e -h --accept-source-agreements --accept-package-agreements
     winget import -i $Apps --accept-package-agreements --accept-source-agreements
 }
 
