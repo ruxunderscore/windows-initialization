@@ -35,6 +35,7 @@ function Install-Apps { #Check for Winget, Install Winget if it isn't installed,
         Write-Host "Installing winget..."
         .\winget-installer.msixbundle #Run the installer.
     }
+    
     Write-Output "Installing Applications"
     $Apps = @( #Define's application's names as appears in winget.
         @{name = "7zip.7zip"}
@@ -49,6 +50,7 @@ function Install-Apps { #Check for Winget, Install Winget if it isn't installed,
         @{name = "Microsoft.Teams"}
         @{name = "voidtools.Everything.Lite"}
     )
+
     foreach ($App in $Apps) {
         $listApp = winget list --exact -q $App.name
         if (![String]::Join("", $listApp).Contains($App.name)) {
