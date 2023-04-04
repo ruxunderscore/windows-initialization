@@ -27,15 +27,15 @@ function header($title) {
     .SYNOPSIS
         Creates header for each function.
     #>
-    Write-Output "‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾`n  $title`n___________________________________`n"
+    Write-Output "`n  $title`n=============================================`n"
 }
 
 function AAP($pkg) {
     <#
-        .SYNOPSIS
-            Installs AppxPackage.
-        .DESCRIPTION
-            Installs AppxPackage.
+    .SYNOPSIS
+        Installs AppxPackage.
+    .DESCRIPTION
+        Installs AppxPackage.
     #>
     Add-AppxPackage -ErrorAction:SilentlyContinue $pkg 
 }
@@ -53,7 +53,13 @@ function InstallPrereqs {
     AAP(".\prereqs\Microsoft.UI.Xaml.2.7.appx")
 }
 
-function WingetCheck { #Check for Winget; If doesn't exist, install prerequisites and winget.
+function WingetCheck {
+    <#
+    .SYNOPSIS
+        Check for Winget; If doesn't exist, install prerequisites and winget.
+    .DESCRIPTION
+        Check for Winget; If doesn't exist, install prerequisites and winget.
+    #>
     header("Checking for Winget...")
     if (Get-Command -ErrorAction:SilentlyContinue winget) {
         Write-Output "Winget is installed.`nContinuing..."
@@ -75,7 +81,13 @@ function WingetCheck { #Check for Winget; If doesn't exist, install prerequisite
     }
 }
 
-function InstallApps { #Install apps from json list.
+function InstallApps {
+    <#
+    .SYNOPSIS
+        Install apps from json list.
+    .DESCRIPTION
+        Install apps from json list.
+    #>
     header("Installing Applications...")
     $Apps = ".\apps.json"
     winget import -i $Apps --accept-package-agreements --accept-source-agreements
