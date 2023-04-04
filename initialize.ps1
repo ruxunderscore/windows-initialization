@@ -27,7 +27,7 @@ function header($title) {
     .SYNOPSIS
         Creates header for each function.
     #>
-    Write-Output "###################################`n# $title`n###################################`n"
+    Write-Output "‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾`n  $title`n___________________________________`n"
 }
 
 function AAP($pkg) {
