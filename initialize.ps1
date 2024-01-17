@@ -46,9 +46,9 @@ function AAP {
     .DESCRIPTION
         Installs AppxPackage.
     #>
-    Write-Output "  Installing $($pkg)...`n"
+    Write-Output "  Installing $($pkg)..."
     Add-AppxPackage -ErrorAction:SilentlyContinue $pkg
-    Write-Output "  $($pkg) installed. Continuing..."
+    Write-Output "  $($pkg) installed. Continuing...`n"
 }
 
 # Function to install prerequisites for Winget
@@ -63,7 +63,7 @@ function InstallPrereqs {
     header -title "Installing winget-cli Prerequisites..."
     Write-Output "  Downloading Microsoft.VCLibs.x64.14.00.Desktop.appx..."
     Invoke-WebRequest -Uri https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx -OutFile Microsoft.VCLibs.x64.14.00.Desktop.appx
-    Write-Output "  Downloading Microsoft.UI.Xaml.2.7.x64.appx..."
+    Write-Output "  Downloading Microsoft.UI.Xaml.2.7.x64.appx...`n"
     Invoke-WebRequest -Uri https://github.com/microsoft/microsoft-ui-xaml/releases/download/v2.7.3/Microsoft.UI.Xaml.2.7.x64.appx -OutFile Microsoft.UI.Xaml.2.7.x64.appx
     AAP -pkg "Microsoft.VCLibs.x64.14.00.Desktop.appx"
     AAP -pkg "Microsoft.UI.Xaml.2.7.x64.appx"
@@ -105,9 +105,9 @@ function WingetCheck {
     #>
     header -title "Checking for Winget..."
     if (-not (Get-Command -ErrorAction SilentlyContinue winget)) {
-        Write-Host "  Winget not found. Installing prerequisites..."
+        Write-Host "  Winget not found. Installing prerequisites...`n"
         InstallPrereqs
-        Write-Host "  Downloading the latest winget-cli..."
+        Write-Host "  Downloading the latest winget-cli...`n"
         Get-LatestGitHubRelease -assetIndex 2
         Write-Output "  Installing winget-cli..."
         AAP -pkg "Microsoft.DesktopAppInstaller.msixbundle"
@@ -128,7 +128,7 @@ function InstallApps {
     header -title "Installing Applications..."
     $appsJson = ".\apps.json"
     Write-Output "  Importing applications from $($appsJson)..."
-    winget import -i $Apps --accept-package-agreements --accept-source-agreements
+    winget import -i $appsJson --accept-package-agreements --accept-source-agreements
 }
 
 #########################
