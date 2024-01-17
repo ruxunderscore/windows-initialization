@@ -36,7 +36,7 @@ The script checks whether the winget package manager is installed on the machine
 
 ## Credits
 
-This script was created by Jonathan Rux and is licensed under the MIT License. If you have any questions or issues with the script, please open an Issue.
+This script was created by RuxUnderscore, aka. Rux, and is licensed under the MIT License. If you have any questions or issues with the script, please open an Issue.
 
 ## License
 
