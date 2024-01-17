@@ -61,24 +61,18 @@ function WingetCheck {
         Check for Winget; If doesn't exist, install prerequisites and winget.
     #>
     header("Checking for Winget...")
-    if (Get-Command -ErrorAction:SilentlyContinue winget) {
-        Write-Output "Winget is installed.`nContinuing..."
-    } else {
-        Write-Output "Winget doesn't exist."
-        $ProgressPreference='Silent'
+    if (-not (Get-Command -ErrorAction SilentlyContinue winget)) {
+        $ProgressPreference = 'Silent'
         InstallPrereqs
-        Write-Output "Winget is being downloaded..."
-        $url="https://github.com/microsoft/winget-cli/releases/download/v1.3.2691/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle"
-        $installer=".\Microsoft.DesktopAppInstaller.msixbundle"
-        Invoke-WebRequest -Uri $url -OutFile $installer
-        Write-Output "Installing winget..."
-        AAP($installer)
-        Write-Output "Cleaning up (Removing winget install file)..."
-        Remove-Item $installer
+        Write-Output "Downloading and installing winget..."
+        $url = "https://github.com/microsoft/winget-cli/releases/download/v1.4.10173/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle"
+        Invoke-WebRequest -Uri $url -OutFile "Microsoft.DesktopAppInstaller.msixbundle"
+        Start-Process -FilePath "Microsoft.DesktopAppInstaller.msixbundle" -ArgumentList "/silent", "/install" -Wait
+        Remove-Item "Microsoft.DesktopAppInstaller.msixbundle"
         Write-Output "Refreshing Environment Variables..."
-        #Refresh environment variables. Thanks to weq in the PowerShell Discord for this.
-        $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
+        $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
     }
+    Write-Output "Winget is installed. Continuing..."
 }
 
 function InstallApps {
