@@ -62,28 +62,30 @@ function InstallPrereqs {
 }
 
 function Get-LatestGitHubRelease {
-    param (
-        [int]$assetIndex
-    )
     <#
     .DESCRIPTION
         Checks Github API for latest version of Winget.
     .SYNOPSIS
         Checks Github API for latest version of Winget.
     #>
-    header -title "Checking GitHub API for latest version of winget-cli..."
+    param (
+        [int]$assetIndex
+    )
+    
+    header -title "Checking GitHub API for the latest version of winget-cli..."
     
     try {
         $response = Invoke-RestMethod -Uri "https://api.github.com/repos/microsoft/winget-cli/releases/latest"
         $latestVersion = $response.tag_name
-        Write-Output "Lastest version:`t$($latestVersion)`n"
+        Write-Output "Latest version:`t$($latestVersion)`n"
         $assetUrl = $response.assets[$assetIndex].browser_download_url
-        Write-Output "LastestVersionUri:`t$($assetUrl)`n"
-        return [System.Uri]$assetUrl[0] #assetUrl was an array. Needed to convert the first value in the array to a Uri and return that instead. 
+        Write-Output "LatestVersionUri:`t$($assetUrl)`n"
+        return [System.Uri]::new($assetUrl)  # Use the constructor to create a System.Uri
     } catch {
         Write-Host "Error: $_"
     }
 }
+
 
 function WingetCheck {
     <#
