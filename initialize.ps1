@@ -66,7 +66,10 @@ function Get-LatestVersion($assetIndex) {
     
     try {
         $releaseAPIResponse = Invoke-RestMethod -Uri "https://api.github.com/repos/microsoft/winget-cli/releases/latest"
+        $latestVersion = $releaseAPIResponse.tag_name
+        Write-Output "Lastest version: $latestVersion"
         $latestVersionUri = $releaseAPIResponse.assets[$assetIndex].browser_download_url
+        Write-Debug "LastestVersionUri:\t$latestVersionUri"
         return $latestVersionUri
     } catch {
         Write-Host "Error: $_"
@@ -87,9 +90,8 @@ function WingetCheck {
         Write-Output "Downloading and installing winget..."
         $assetIndex = 3
         $latestUri = Get-LatestVersion($assetIndex)
-        Invoke-WebRequest -Uri $latestUri -OutFile "Microsoft.DesktopAppInstaller.msixbundle"
+        Invoke-WebRequest -Uri $latestUri -OutFile Microsoft.DesktopAppInstaller.msixbundle
         AAP("Microsoft.DesktopAppInstaller.msixbundle")
-        Remove-Item "Microsoft.DesktopAppInstaller.msixbundle"
         Write-Output "Refreshing Environment Variables..."
         $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
     }
