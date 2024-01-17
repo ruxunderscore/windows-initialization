@@ -68,7 +68,8 @@ function Get-LatestVersion($assetIndex) {
         $releaseAPIResponse = Invoke-RestMethod -Uri "https://api.github.com/repos/microsoft/winget-cli/releases/latest"
         $latestVersion = $releaseAPIResponse.tag_name
         Write-Output "Lastest version:`t$($latestVersion)`n"
-        [uri]$latestVersionUri = $releaseAPIResponse.assets[$assetIndex].browser_download_url
+        $latestVersionBrowserUrl = $releaseAPIResponse.assets[$assetIndex].browser_download_url
+        $latestVersionUri = New-Object System.Uri $latestVersionBrowserUrl
         Write-Output "LastestVersionUri:`t$($latestVersionUri)`n"
         return $latestVersionUri
     } catch {
