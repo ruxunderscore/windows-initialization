@@ -43,7 +43,7 @@
 					"PackageIdentifier" : "Microsoft.PowerToys"
 				},
 				{
-					"PackageIdentifier" : "Google.Chrome"
+					"PackageIdentifier" : "Mozilla.Firefox.ESR"
 				},
 				{
 					"PackageIdentifier" : "Microsoft.VCRedist.2015+.x86"
