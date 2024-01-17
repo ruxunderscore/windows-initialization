@@ -43,16 +43,34 @@ function AAP($pkg) {
 function InstallPrereqs {
     <#
     .DESCRIPTION
-        Installs Winget Prerequisites from the .\prereqs directory.
+        Downloads and Installs Winget Prerequisites.
     .SYNOPSIS
-        Installs Winget Prerequisites from the .\prereqs directory.
+        Downloads and Installs Winget Prerequisites.
     #>
 
-    header("Installing Winget Prerequisites...")
+    header("Installing winget-cli Prerequisites...")
     Invoke-WebRequest -Uri https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx -OutFile Microsoft.VCLibs.x64.14.00.Desktop.appx
     Invoke-WebRequest -Uri https://github.com/microsoft/microsoft-ui-xaml/releases/download/v2.7.3/Microsoft.UI.Xaml.2.7.x64.appx -OutFile Microsoft.UI.Xaml.2.7.x64.appx
     AAP("Microsoft.VCLibs.x64.14.00.Desktop.appx")
     AAP("Microsoft.UI.Xaml.2.7.x64.appx")
+}
+
+function Get-LatestVersion($assetIndex) {
+    <#
+    .DESCRIPTION
+        Checks Github API for latest version of Winget.
+    .SYNOPSIS
+        Checks Github API for latest version of Winget.
+    #>
+    header("Checking GitHub API for latest version of winget-cli...")
+    
+    try {
+        $releaseAPIResponse = Invoke-RestMethod -Uri "https://api.github.com/repos/microsoft/winget-cli/releases/latest"
+        $latestTag = $releaseAPIResponse.assets[$assetIndex].browser_download_url
+        return $latestTag
+    } catch {
+        Write-Host "Error: $_"
+    }
 }
 
 function WingetCheck {
@@ -67,8 +85,9 @@ function WingetCheck {
         $ProgressPreference = 'Silent'
         InstallPrereqs
         Write-Output "Downloading and installing winget..."
-        $url = "https://github.com/microsoft/winget-cli/releases/download/v1.4.10173/Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle"
-        Invoke-WebRequest -Uri $url -OutFile "Microsoft.DesktopAppInstaller.msixbundle"
+        $assetIndex = 3
+        $latestUri = Get-LatestVersion($assetIndex)
+        Invoke-WebRequest -Uri $latestUri -OutFile "Microsoft.DesktopAppInstaller.msixbundle"
         Start-Process -FilePath "Microsoft.DesktopAppInstaller.msixbundle" -ArgumentList "/silent", "/install" -Wait
         Remove-Item "Microsoft.DesktopAppInstaller.msixbundle"
         Write-Output "Refreshing Environment Variables..."
