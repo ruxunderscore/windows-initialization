@@ -12,7 +12,8 @@ This PowerShell script initializes a Windows 10/11 x64 machine and installs init
 
 1. Clone this repository to your local machine.
 2. Open PowerShell as Administrator and navigate to the directory where the script is located.
-3. Run the script by entering the following command: `.\initialize.ps1`.
+3. Set Execution Policy to Bypass: `Set-ExecutionPolicy Bypass` **#Remember to never run scripts blindly.**
+4. Run the script by entering the following command: `.\initialize.ps1`.
 
 ## Functionality
 
