@@ -31,7 +31,6 @@ The script checks whether the winget package manager is installed on the machine
 ## Notes
 
 - This script has been tested on Windows 10/11 x64.
-- The `.\prereqs` directory contains the necessary prerequisites for winget.
 - The `apps.json` file contains a list of apps to be installed using winget.
 
 ## Credits
