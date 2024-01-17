@@ -127,8 +127,9 @@ function InstallApps {
     #>
     header -title "Installing Applications..."
     $appsJson = ".\apps.json"
-    Write-Output "  Importing applications from $($appsJson)..."
+    Write-Output "  Installing applications from $($appsJson)..."
     winget import -i $appsJson --accept-package-agreements --accept-source-agreements
+    Write-Output "  Complete install of applications from $($appsJson)... Exiting..."
 }
 
 #########################
