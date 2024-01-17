@@ -81,7 +81,8 @@ function Get-LatestGitHubRelease {
         $assetUrl = $response.assets[$assetIndex].browser_download_url
         Write-Output "assetUrl Type:`t`t$($assetUrl.GetType())`n"
         Write-Output "LatestVersionUri:`t$($assetUrl)`n"
-        return [System.Uri]::new($assetUrl)  # Use the constructor to create a System.Uri
+        # return $assetUrl  # Use the constructor to create a System.Uri
+        Invoke-WebRequest -Uri $assetUrl -OutFile Microsoft.DesktopAppInstaller.msixbundle
     } catch {
         Write-Host "Error: $_"
     }
@@ -101,9 +102,8 @@ function WingetCheck {
         InstallPrereqs
         Write-Output "Downloading and installing winget..."
         $assetIndex = 2
-        $latestUri = Get-LatestGitHubRelease -assetIndex $assetIndex
-        Write-Output "URI:`t$($latestUri)"
-        Invoke-WebRequest -Uri $latestUri -OutFile Microsoft.DesktopAppInstaller.msixbundle
+        Get-LatestGitHubRelease -assetIndex $assetIndex
+        # $latestUri = Get-LatestGitHubRelease -assetIndex $assetIndex
         AAP -pkg "Microsoft.DesktopAppInstaller.msixbundle"
         Write-Output "Refreshing Environment Variables..."
         $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
