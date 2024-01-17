@@ -27,7 +27,7 @@ function header($title) {
     .SYNOPSIS
         Creates header for each function.
     #>
-    Write-Output "`n  $title`n=============================================`n"
+    Write-Output -ForegroundColor DarkBlue "`n  $title`n=============================================`n"
 }
 
 function AAP($pkg) {
