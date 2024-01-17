@@ -88,7 +88,7 @@ function WingetCheck {
         $ProgressPreference = 'Silent'
         InstallPrereqs
         Write-Output "Downloading and installing winget..."
-        $assetIndex = 3
+        $assetIndex = 2
         $latestUri = Get-LatestVersion($assetIndex)
         Write-Output "URI:`t$latestUri"
         Invoke-WebRequest -Uri $latestUri -OutFile Microsoft.DesktopAppInstaller.msixbundle
