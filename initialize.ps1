@@ -79,7 +79,9 @@ function Get-LatestGitHubRelease {
         $latestVersion = $response.tag_name
         Write-Output "Latest version:`t$($latestVersion)`n"
         $assetUrl = $response.assets[$assetIndex].browser_download_url
-        $assetUrlString = [string]$assetUrl
+        Write-Output "assetUrl Type:`t`t$($assetUrl.GetType())"
+        $assetUrlString = [System.String]$assetUrl
+        Write-Output "assetUrlString Type:`t$($assetUrlString.GetType())"
         Write-Output "LatestVersionUri:`t$($assetUrlString)`n"
         return [System.Uri]::new($assetUrlString)  # Use the constructor to create a System.Uri
     } catch {
