@@ -27,7 +27,7 @@ function header($title) {
     .SYNOPSIS
         Creates header for each function.
     #>
-    Write-Output -ForegroundColor DarkBlue "`n  $title`n=============================================`n"
+    Write-Output "`n  $title`n=============================================`n" -ForegroundColor DarkBlue 
 }
 
 function AAP($pkg) {
@@ -68,7 +68,7 @@ function Get-LatestVersion($assetIndex) {
         $releaseAPIResponse = Invoke-RestMethod -Uri "https://api.github.com/repos/microsoft/winget-cli/releases/latest"
         $latestVersion = $releaseAPIResponse.tag_name
         Write-Output "Lastest version:`t"
-        Write-Output -ForegroundColor Green "$latestVersion`n"
+        Write-Output "$latestVersion`n" -ForegroundColor Green 
         $latestVersionUri = $releaseAPIResponse.assets[$assetIndex].browser_download_url
         Write-Output "LastestVersionUri:`t$latestVersionUri`n"
         return $latestVersionUri
