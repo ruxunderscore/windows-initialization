@@ -2,6 +2,8 @@
 
 This PowerShell script initializes a Windows 10/11 x64 machine and installs initial software needed by employees at a company or for individual use. It uses the winget package manager to install applications listed in the `apps.json` file.
 
+![image](img/example.png)
+
 ## Requirements
 
 -   Windows 10/11 x64 machine
