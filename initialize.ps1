@@ -3,7 +3,7 @@
 #                                                       |  /  \    /  \__| ____    __| _/______  _  ________  #
 #       Author        : Jonathan Rux                    |  \   \/\/   /  |/    \  / __ |/  _ \ \/ \/ /  ___/  #
 #       Email         : jonathan.e.rux@underscore.com   |   \        /|  |   |  \/ /_/ (  <_> )     /\___ \   #
-#       Version       : 1.1                             |    \__/\  / |__|___|  /\____ |\____/ \/\_//____  >  #
+#       Version       : 2.0                             |    \__/\  / |__|___|  /\____ |\____/ \/\_//____  >  #
 #       OS Support    : Windows 10,11 x64               |         \/          \/      \/                 \/   #
 #                                                       |       Initialization Setup Script.                  #
 #                                                       |                                                     #
@@ -20,6 +20,8 @@
 #       Functions       #
 #########################
 
+
+# Function to create a header for each section
 function header {
     param (
         [string]$title
@@ -30,9 +32,10 @@ function header {
     .SYNOPSIS
         Creates header for each function.
     #>
-    Write-Output "`n  $($title)`n=============================================`n"
+    Write-Output "$($title)`n$('='*64)`n"
 }
 
+# Function to install AppxPackage
 function AAP {
     param (
         [string]$pkg
@@ -43,9 +46,12 @@ function AAP {
     .DESCRIPTION
         Installs AppxPackage.
     #>
-    Add-AppxPackage -ErrorAction:SilentlyContinue $pkg 
+    Write-Output "  Installing $($pkg)...`n"
+    Add-AppxPackage -ErrorAction:SilentlyContinue $pkg
+    Write-Output "  $($pkg) installed. Continuing..."
 }
 
+# Function to install prerequisites for Winget
 function InstallPrereqs {
     <#
     .DESCRIPTION
@@ -55,12 +61,15 @@ function InstallPrereqs {
     #>
 
     header -title "Installing winget-cli Prerequisites..."
+    Write-Output "  Downloading Microsoft.VCLibs.x64.14.00.Desktop.appx..."
     Invoke-WebRequest -Uri https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx -OutFile Microsoft.VCLibs.x64.14.00.Desktop.appx
+    Write-Output "  Downloading Microsoft.UI.Xaml.2.7.x64.appx..."
     Invoke-WebRequest -Uri https://github.com/microsoft/microsoft-ui-xaml/releases/download/v2.7.3/Microsoft.UI.Xaml.2.7.x64.appx -OutFile Microsoft.UI.Xaml.2.7.x64.appx
     AAP -pkg "Microsoft.VCLibs.x64.14.00.Desktop.appx"
     AAP -pkg "Microsoft.UI.Xaml.2.7.x64.appx"
 }
 
+# Function to get the latest version of Winget from GitHub
 function Get-LatestGitHubRelease {
     <#
     .DESCRIPTION
@@ -77,18 +86,16 @@ function Get-LatestGitHubRelease {
     try {
         $response = Invoke-RestMethod -Uri "https://api.github.com/repos/microsoft/winget-cli/releases/latest"
         $latestVersion = $response.tag_name
-        Write-Output "Latest version:`t$($latestVersion)`n"
+        Write-Output "  Latest version:`t$($latestVersion)`n"
         $assetUrl = $response.assets[$assetIndex].browser_download_url
-        Write-Output "assetUrl Type:`t`t$($assetUrl.GetType())`n"
-        Write-Output "LatestVersionUri:`t$($assetUrl)`n"
-        # return $assetUrl  # Use the constructor to create a System.Uri
         Invoke-WebRequest -Uri $assetUrl -OutFile Microsoft.DesktopAppInstaller.msixbundle
     } catch {
-        Write-Host "Error: $_"
+        Write-Host "  Error: $_"
     }
 }
 
 
+# Function to check for Winget; if not found, install prerequisites and Winget
 function WingetCheck {
     <#
     .SYNOPSIS
@@ -98,19 +105,19 @@ function WingetCheck {
     #>
     header -title "Checking for Winget..."
     if (-not (Get-Command -ErrorAction SilentlyContinue winget)) {
-        $ProgressPreference = 'Silent'
+        Write-Host "  Winget not found. Installing prerequisites..."
         InstallPrereqs
-        Write-Output "Downloading and installing winget..."
-        $assetIndex = 2
-        Get-LatestGitHubRelease -assetIndex $assetIndex
-        # $latestUri = Get-LatestGitHubRelease -assetIndex $assetIndex
+        Write-Host "  Downloading the latest winget-cli..."
+        Get-LatestGitHubRelease -assetIndex 2
+        Write-Output "  Installing winget-cli..."
         AAP -pkg "Microsoft.DesktopAppInstaller.msixbundle"
-        Write-Output "Refreshing Environment Variables..."
+        Write-Output "  Refreshing Environment Variables..."
         $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
     }
-    Write-Output "Winget is installed. Continuing..."
+    Write-Output "  Winget-cli is installed. Continuing..."
 }
 
+# Function to install applications from a JSON list
 function InstallApps {
     <#
     .SYNOPSIS
@@ -119,12 +126,17 @@ function InstallApps {
         Install apps from json list.
     #>
     header -title "Installing Applications..."
-    $Apps = ".\apps.json"
+    $appsJson = ".\apps.json"
+    Write-Output "  Importing applications from $($appsJson)..."
     winget import -i $Apps --accept-package-agreements --accept-source-agreements
 }
 
 #########################
 #    Call Functions     #
 #########################
+
+# Check for Winget and install if not found
 WingetCheck
+
+# Install applications
 InstallApps
