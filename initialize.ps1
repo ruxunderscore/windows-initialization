@@ -90,6 +90,7 @@ function WingetCheck {
         Write-Output "Downloading and installing winget..."
         $assetIndex = 3
         $latestUri = Get-LatestVersion($assetIndex)
+        Write-Output $latestUri
         Invoke-WebRequest -Uri $latestUri -OutFile Microsoft.DesktopAppInstaller.msixbundle
         AAP("Microsoft.DesktopAppInstaller.msixbundle")
         Write-Output "Refreshing Environment Variables..."
