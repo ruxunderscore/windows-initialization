@@ -69,7 +69,7 @@ function Get-LatestVersion($assetIndex) {
         $latestVersion = $releaseAPIResponse.tag_name
         Write-Output "Lastest version: $latestVersion"
         $latestVersionUri = $releaseAPIResponse.assets[$assetIndex].browser_download_url
-        Write-Debug "LastestVersionUri:\t$latestVersionUri"
+        Write-Output "LastestVersionUri:`t$latestVersionUri"
         return $latestVersionUri
     } catch {
         Write-Host "Error: $_"
@@ -89,8 +89,8 @@ function WingetCheck {
         InstallPrereqs
         Write-Output "Downloading and installing winget..."
         $assetIndex = 3
-        [uri]$latestUri = Get-LatestVersion($assetIndex)
-        Write-Output $latestUri
+        $latestUri = Get-LatestVersion($assetIndex)
+        Write-Output "URI:`t$latestUri"
         Invoke-WebRequest -Uri $latestUri -OutFile Microsoft.DesktopAppInstaller.msixbundle
         AAP("Microsoft.DesktopAppInstaller.msixbundle")
         Write-Output "Refreshing Environment Variables..."
