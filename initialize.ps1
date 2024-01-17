@@ -27,7 +27,7 @@ function header($title) {
     .SYNOPSIS
         Creates header for each function.
     #>
-    Write-Output "`n  $title`n=============================================`n" -ForegroundColor DarkBlue 
+    Write-Output "`n  $($title)`n=============================================`n"
 }
 
 function AAP($pkg) {
@@ -67,10 +67,9 @@ function Get-LatestVersion($assetIndex) {
     try {
         $releaseAPIResponse = Invoke-RestMethod -Uri "https://api.github.com/repos/microsoft/winget-cli/releases/latest"
         $latestVersion = $releaseAPIResponse.tag_name
-        Write-Output "Lastest version:`t"
-        Write-Output "$latestVersion`n" -ForegroundColor Green 
+        Write-Output "Lastest version:`t$($latestVersion)`n"
         $latestVersionUri = $releaseAPIResponse.assets[$assetIndex].browser_download_url
-        Write-Output "LastestVersionUri:`t$latestVersionUri`n"
+        Write-Output "LastestVersionUri:`t$($latestVersionUri)`n"
         return $latestVersionUri
     } catch {
         Write-Host "Error: $_"
@@ -90,8 +89,8 @@ function WingetCheck {
         InstallPrereqs
         Write-Output "Downloading and installing winget..."
         $assetIndex = 2
-        $latestUri = Get-LatestVersion($assetIndex)
-        Write-Output "URI:`t$latestUri"
+        [uri]$latestUri = Get-LatestVersion($assetIndex)
+        Write-Output "URI:`t$($latestUri)"
         Invoke-WebRequest -Uri $latestUri -OutFile Microsoft.DesktopAppInstaller.msixbundle
         AAP("Microsoft.DesktopAppInstaller.msixbundle")
         Write-Output "Refreshing Environment Variables..."
