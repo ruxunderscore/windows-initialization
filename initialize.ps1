@@ -68,7 +68,7 @@ function Get-LatestVersion($assetIndex) {
         $releaseAPIResponse = Invoke-RestMethod -Uri "https://api.github.com/repos/microsoft/winget-cli/releases/latest"
         $latestVersion = $releaseAPIResponse.tag_name
         Write-Output "Lastest version:`t$($latestVersion)`n"
-        $latestVersionUri = $releaseAPIResponse.assets[$assetIndex].browser_download_url
+        [uri]$latestVersionUri = $releaseAPIResponse.assets[$assetIndex].browser_download_url
         Write-Output "LastestVersionUri:`t$($latestVersionUri)`n"
         return $latestVersionUri
     } catch {
@@ -89,7 +89,7 @@ function WingetCheck {
         InstallPrereqs
         Write-Output "Downloading and installing winget..."
         $assetIndex = 2
-        [uri]$latestUri = Get-LatestVersion($assetIndex)
+        $latestUri = Get-LatestVersion($assetIndex)
         Write-Output "URI:`t$($latestUri)"
         Invoke-WebRequest -Uri $latestUri -OutFile Microsoft.DesktopAppInstaller.msixbundle
         AAP("Microsoft.DesktopAppInstaller.msixbundle")
