@@ -111,10 +111,10 @@ function WingetCheck {
         Get-LatestGitHubRelease -assetIndex 2
         Write-Output "  Installing winget-cli..."
         AAP -pkg "Microsoft.DesktopAppInstaller.msixbundle"
-        Write-Output "  Refreshing Environment Variables..."
+        Write-Output "  Refreshing Environment Variables...`n"
         $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
     }
-    Write-Output "  Winget-cli is installed. Continuing..."
+    Write-Output "  Winget-cli is installed. Continuing...`n"
 }
 
 # Function to install applications from a JSON list
