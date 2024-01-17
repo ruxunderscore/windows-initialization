@@ -20,7 +20,10 @@
 #       Functions       #
 #########################
 
-function header($title) {
+function header {
+    param (
+        [string]$title
+    )
     <#
     .DESCRIPTION
         Creates header for each function.
@@ -30,7 +33,10 @@ function header($title) {
     Write-Output "`n  $($title)`n=============================================`n"
 }
 
-function AAP($pkg) {
+function AAP {
+    param (
+        [string]$pkg
+    )
     <#
     .SYNOPSIS
         Installs AppxPackage.
@@ -48,30 +54,33 @@ function InstallPrereqs {
         Downloads and Installs Winget Prerequisites.
     #>
 
-    header("Installing winget-cli Prerequisites...")
+    header -title "Installing winget-cli Prerequisites..."
     Invoke-WebRequest -Uri https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx -OutFile Microsoft.VCLibs.x64.14.00.Desktop.appx
     Invoke-WebRequest -Uri https://github.com/microsoft/microsoft-ui-xaml/releases/download/v2.7.3/Microsoft.UI.Xaml.2.7.x64.appx -OutFile Microsoft.UI.Xaml.2.7.x64.appx
-    AAP("Microsoft.VCLibs.x64.14.00.Desktop.appx")
-    AAP("Microsoft.UI.Xaml.2.7.x64.appx")
+    AAP -pkg "Microsoft.VCLibs.x64.14.00.Desktop.appx"
+    AAP -pkg "Microsoft.UI.Xaml.2.7.x64.appx"
 }
 
-function Get-LatestVersion($assetIndex) {
+function Get-LatestGitHubRelease {
+    param (
+        [int]$assetIndex
+    )
     <#
     .DESCRIPTION
         Checks Github API for latest version of Winget.
     .SYNOPSIS
         Checks Github API for latest version of Winget.
     #>
-    header("Checking GitHub API for latest version of winget-cli...")
+    header -title "Checking GitHub API for latest version of winget-cli..."
     
     try {
-        $releaseAPIResponse = Invoke-RestMethod -Uri "https://api.github.com/repos/microsoft/winget-cli/releases/latest"
-        $latestVersion = $releaseAPIResponse.tag_name
+        $response = Invoke-RestMethod -Uri "https://api.github.com/repos/microsoft/winget-cli/releases/latest"
+        $latestVersion = $response.tag_name
         Write-Output "Lastest version:`t$($latestVersion)`n"
-        $latestVersionBrowserUrl = $releaseAPIResponse.assets[$assetIndex].browser_download_url
-        $latestVersionUri = New-Object System.Uri $latestVersionBrowserUrl
-        Write-Output "LastestVersionUri:`t$($latestVersionUri)`n"
-        return $latestVersionUri
+        $assetUrl = $response.assets[$assetIndex].browser_download_url
+        $uriObject = New-Object System.Uri $assetUrl
+        Write-Output "LastestVersionUri:`t$($uriObject)`n"
+        return $uriObject
     } catch {
         Write-Host "Error: $_"
     }
@@ -84,16 +93,16 @@ function WingetCheck {
     .DESCRIPTION
         Check for Winget; If doesn't exist, install prerequisites and winget.
     #>
-    header("Checking for Winget...")
+    header -title "Checking for Winget..."
     if (-not (Get-Command -ErrorAction SilentlyContinue winget)) {
         $ProgressPreference = 'Silent'
         InstallPrereqs
         Write-Output "Downloading and installing winget..."
         $assetIndex = 2
-        $latestUri = Get-LatestVersion($assetIndex)
+        $latestUri = Get-LatestGitHubRelease -assetIndex $assetIndex
         Write-Output "URI:`t$($latestUri)"
         Invoke-WebRequest -Uri $latestUri -OutFile Microsoft.DesktopAppInstaller.msixbundle
-        AAP("Microsoft.DesktopAppInstaller.msixbundle")
+        AAP -pkg "Microsoft.DesktopAppInstaller.msixbundle"
         Write-Output "Refreshing Environment Variables..."
         $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
     }
@@ -107,7 +116,7 @@ function InstallApps {
     .DESCRIPTION
         Install apps from json list.
     #>
-    header("Installing Applications...")
+    header -title "Installing Applications..."
     $Apps = ".\apps.json"
     winget import -i $Apps --accept-package-agreements --accept-source-agreements
 }
