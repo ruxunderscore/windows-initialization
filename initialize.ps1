@@ -88,7 +88,7 @@ function WingetCheck {
         $assetIndex = 3
         $latestUri = Get-LatestVersion($assetIndex)
         Invoke-WebRequest -Uri $latestUri -OutFile "Microsoft.DesktopAppInstaller.msixbundle"
-        Start-Process -FilePath "Microsoft.DesktopAppInstaller.msixbundle" -ArgumentList "/silent", "/install" -Wait
+        AAP("Microsoft.DesktopAppInstaller.msixbundle")
         Remove-Item "Microsoft.DesktopAppInstaller.msixbundle"
         Write-Output "Refreshing Environment Variables..."
         $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
