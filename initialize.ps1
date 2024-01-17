@@ -79,7 +79,7 @@ function Get-LatestGitHubRelease {
         Write-Output "Lastest version:`t$($latestVersion)`n"
         $assetUrl = $response.assets[$assetIndex].browser_download_url
         Write-Output "LastestVersionUri:`t$($assetUrl)`n"
-        return [System.Uri]$assetUrl
+        return [System.Uri]$assetUrl[0] #assetUrl was an array. Needed to convert the first value in the array to a Uri and return that instead. 
     } catch {
         Write-Host "Error: $_"
     }
