@@ -6,16 +6,17 @@ This PowerShell script initializes a Windows 10/11 x64 machine and installs init
 
 ## Requirements
 
--   Windows 10/11 x64 machine
+-   Windows 10/11 (22H2) or later
 -   PowerShell 5.1 or later
 -   Internet connectivity
 
 ## Usage
 
 1. Clone this repository to your local machine.
-2. Open PowerShell as Administrator and navigate to the directory where the script is located.
-3. Set Execution Policy to Bypass: `Set-ExecutionPolicy Bypass` **#Remember to never run scripts blindly.**
-4. Run the script by entering the following command: `.\initialize.ps1`.
+2. Supply your own exported apps.json file from another computer, or use `example-apps.json` as a template.
+3. Open PowerShell as Administrator and navigate to the directory where the script is located.
+4. Set Execution Policy to Bypass: `Set-ExecutionPolicy Bypass` **#Remember to never run scripts blindly.**
+5. Run the script by entering the following command: `.\initialize.ps1`.
 
 ## Functionality
 
@@ -30,8 +31,8 @@ The script checks whether the winget package manager is installed on the machine
 
 ## Notes
 
-- This script has been tested on Windows 10/11 x64.
-- The `apps.json` file contains a list of apps to be installed using winget.
+- This script has been tested on Windows 10/11 22H2 x64.
+- The `example-apps.json` file contains a list of apps to be installed using winget.
 
 ## Credits
 
